@@ -1,8 +1,12 @@
 # Strava MCP — tools, parameters & data reference
 
-Field-by-field reference for every Strava MCP tool. **All numeric values are
-metric** unless noted. Example values below are illustrative, not real data.
-Convert to km/miles/pace for display (see SKILL.md "Conversions cheat sheet").
+Field-by-field reference for every Strava MCP tool. **Don't assume a unit system:**
+values track the athlete's account settings, so they may be metric for one user
+and imperial for another. Confirm via `measurement_preference` and sanity-check
+magnitudes. Units annotated below (metres, m/s, °C, etc.) describe the **common
+metric case**; treat them as the default to verify, not a guarantee. Example
+values are illustrative, not real data. Convert to km/miles/pace for display (see
+SKILL.md "Conversions cheat sheet").
 
 A general rule across the API: **optional fields are omitted when unavailable**
 (no HR monitor, no power meter, no GPS, etc.). Never assume a key exists —
@@ -23,12 +27,14 @@ check before reading it.
 - **Params:** none.
 - **Returns:** identity and preferences:
   - `id` (int), `first_name`, `last_name`
-  - `measurement_preference` — `"Metric"` or `"Imperial"`. Drives display units.
-  - `gender`, `weight` (kg)
+  - `measurement_preference` — `"Metric"` or `"Imperial"`. Your best signal for
+    the athlete's unit system; use it to interpret and convert other tools' values,
+    and to choose display units when the user doesn't specify.
+  - `gender`, `weight` (mass — kg on metric accounts; verify)
   - `location` — `{ city, state, country }` (any may be absent)
   - `current_focus` (when set) — `{ id, focus_type (e.g. "TrainForEvent"),
     open_text (free-text goal), expires_at_local (ISO local datetime) }`
-- **Use:** call early in any analysis to fix units and understand the goal.
+- **Use:** call early in any analysis to establish the unit system and the goal.
 
 ## `get_athlete_zones`
 - **Params:** `as_of_date` (optional, `YYYY-MM-DD`) for historical zones; omit for current.

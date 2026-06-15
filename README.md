@@ -13,11 +13,15 @@ practices (a tight `SKILL.md` plus progressively-disclosed reference files).
 
 ## Why
 
-The Strava MCP returns everything in **metric**, with speeds in **m/s**, distances
-in **metres**, and run-pace zones as **m/s boundaries** — easy to misread. It also
-silently omits missing data (no HR monitor → no heart-rate fields). This skill
-encodes those gotchas and the right conversions (km **and** miles, pace per km/mile)
-so Claude stops guessing and starts coaching.
+Strava MCP responses are easy to misread. Values come back as raw numbers —
+speeds as m/s, run-pace zones as *speed* boundaries, distances and elevation as
+bare figures — and **you can't safely assume which measurement system they're in**:
+it tracks the athlete's account/server settings, so one user's data may be metric
+and another's imperial. The MCP also silently omits missing data (no HR monitor →
+no heart-rate fields). This skill teaches Claude to **confirm the unit system from
+the athlete's profile**, sanity-check magnitudes, convert correctly (km **or**
+miles, pace per km/mile), and never guess — so it interprets the numbers like a
+coach instead of mislabeling them.
 
 ## What's inside
 
@@ -25,9 +29,9 @@ so Claude stops guessing and starts coaching.
 strava-claude-skill/
 ├── .claude-plugin/
 │   ├── marketplace.json                  # makes this repo an installable Claude Code marketplace
-│   └── plugin.json                        # the "strava" plugin manifest
+│   └── plugin.json                        # the "strava-coach" plugin manifest
 ├── skills/
-│   └── strava/
+│   └── strava-coach/
 │       ├── SKILL.md                       # entry point: tool map, gotchas, conversions, workflows
 │       └── references/
 │           ├── tools-and-data.md          # every tool: params, output fields, units, quirks
@@ -64,11 +68,11 @@ one command each:
 
 ```text
 /plugin marketplace add srothgan/strava-claude-skill
-/plugin install strava@srothgan-skills
+/plugin install strava-coach@srothgan-skills
 ```
 
 Update later with `/plugin marketplace update srothgan-skills`. The skill is
-namespaced as `strava` once installed.
+namespaced as `strava-coach` once installed.
 
 ### Option B — manual copy (any Skills-capable Claude)
 
@@ -79,21 +83,31 @@ Copy the skill folder into your skills directory:
 
 ```bash
 git clone https://github.com/srothgan/strava-claude-skill.git
-cp -r strava-claude-skill/skills/strava ~/.claude/skills/
+cp -r strava-claude-skill/skills/strava-coach ~/.claude/skills/
 ```
 
 ```powershell
 git clone https://github.com/srothgan/strava-claude-skill.git
-Copy-Item -Recurse strava-claude-skill\skills\strava "$env:USERPROFILE\.claude\skills\"
+Copy-Item -Recurse strava-claude-skill\skills\strava-coach "$env:USERPROFILE\.claude\skills\"
 ```
 
-You should end up with `~/.claude/skills/strava/SKILL.md`. Restart Claude so it
+You should end up with `~/.claude/skills/strava-coach/SKILL.md`. Restart Claude so it
 picks up the new skill.
 
 ### Option C — project skill
 
-Drop the `skills/strava/` folder into your project's `.claude/skills/` directory
+Drop the `skills/strava-coach/` folder into your project's `.claude/skills/` directory
 to ship it with a repo.
+
+### Option D — `npx skills` (cross-agent)
+
+The skill follows the open Agent Skills spec, so the
+[`skills` CLI](https://github.com/vercel-labs/skills) can install it straight from
+this repo into Claude Code and other agents (Cursor, Copilot, Codex, …):
+
+```bash
+npx skills add srothgan/strava-claude-skill
+```
 
 ## Usage
 
@@ -119,8 +133,8 @@ numbers with appropriate caveats.
 ## Publishing
 
 This repo doubles as a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces):
-`.claude-plugin/marketplace.json` lists one plugin (`strava`) sourced from the
-repo root (`plugin.json` + `skills/`). To publish:
+`.claude-plugin/marketplace.json` lists one plugin (`strava-coach`) sourced from
+the repo root (`plugin.json` + `skills/`). To publish:
 
 1. Push this repo to `github.com/srothgan/strava-claude-skill` (public).
 2. (Optional) Validate the marketplace with `claude plugin validate .`.

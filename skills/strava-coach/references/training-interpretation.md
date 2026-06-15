@@ -39,8 +39,9 @@ Power is the most objective intensity metric when a meter is present
 (`has_device_watts` = true).
 
 ### Run-pace zones (5-zone)
-**Boundaries are speeds in m/s** — convert each to pace per km and per mile. A
-higher m/s bound is a *faster* (lower) pace. `run_zone_source` such as
+**Boundaries are speeds, not paces** (m/s on metric accounts — verify the unit
+system) — convert each to pace per km and per mile. A higher speed bound is a
+*faster* (lower) pace. `run_zone_source` such as
 `PerformancePredictions` or `RacePace` indicates how they were modeled; if a
 `sample_race_pace` is flagged `is_estimated`, the zones inherit that uncertainty.
 

@@ -1,5 +1,5 @@
 ---
-name: strava
+name: strava-coach
 description: >-
   Accesses and interprets an athlete's Strava data via the Strava MCP, with a
   coach's perspective. Use whenever the user asks about their runs, rides, swims,
@@ -31,9 +31,11 @@ only when the MCP is not yet connected.
   gives `measurement_preference` (Metric/Imperial), plus identity, body metrics,
   and `current_focus` (a stated training goal + an `expires_at_local` date when
   present). Tailor units and advice to these.
-- **The MCP always returns metric.** You convert for display. Respect the
-  athlete's `measurement_preference`, but if the user explicitly asks for km or
-  miles, honor that request regardless of the stored preference.
+- **Don't assume the unit system — confirm it.** Read `measurement_preference`
+  (Metric/Imperial) from the profile; it reflects the athlete's account settings
+  and is your closest source of truth for how values come back. Do not hardcode
+  "it's metric": sanity-check magnitudes, and **convert to whatever unit the user
+  asks for** (km or miles), defaulting to the athlete's preference when unspecified.
 
 ## Tool map — pick the right one
 
@@ -51,11 +53,16 @@ only when the MCP is not yet connected.
 
 ## Critical gotchas (read before trusting numbers)
 
-- **Everything is metric.** `distance` = metres, `*_speed` = m/s,
-  `altitude`/`elevation_gain` = metres, `temp` = °C, run-zone bounds = m/s.
-  Convert to km **or** miles per preference/request.
-- **Speed is m/s, not pace.** For runs (and often rides shown as speed), convert
-  before showing. Never show a runner "2.47 m/s" — show pace per km or per mile.
+- **Don't hardcode the unit system; confirm it per athlete.** Values are raw
+  numbers whose unit system tracks the athlete's account settings, so it can be
+  metric for one user and imperial for another — never assume. Check
+  `measurement_preference`, sanity-check magnitudes, and convert to the unit the
+  user asked for (km **or** miles). Typical metric forms are `distance`/
+  `elevation` in metres, `*_speed` and run-zone bounds in m/s, `temp` in °C; an
+  imperial account may surface miles/feet/°F — verify rather than trust the label.
+- **Speed is not pace.** Speed values (e.g. m/s) read backwards from pace: faster =
+  higher speed but *lower* (faster) pace. For runs, always convert speed to pace
+  before showing — never show a runner a raw speed like "2.47 m/s".
 - **Non-distance sports** (WeightTraining, Elliptical, Yoga, etc.) return
   `distance:0`, `avg_speed:0`, `elevation_gain:0`. Don't compute pace/speed for them.
 - **IDs are strings.** Pass `activity_id` as a string.
@@ -79,7 +86,9 @@ only when the MCP is not yet connected.
 
 ## Conversions cheat sheet
 
-Always state which unit you used.
+Always state which unit you used. These formulas assume **metric** raw values (the
+common case); if you've confirmed an imperial account or a magnitude looks off,
+adjust the source unit accordingly before converting.
 
 - **Pace min/km** from speed (m/s): `sec_per_km = 1000 / speed`; format `m:ss`.
   e.g. `2.473 m/s → 6:44 /km`.

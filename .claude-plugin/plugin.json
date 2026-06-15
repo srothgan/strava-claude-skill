@@ -1,5 +1,5 @@
 {
-  "name": "strava",
+  "name": "strava-coach",
   "description": "Access and interpret Strava data via the Strava MCP with a coach's perspective: correct tools, data shapes, units (km/miles/pace), and training analysis.",
   "version": "0.1.0",
   "author": {

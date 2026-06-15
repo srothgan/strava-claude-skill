@@ -6,7 +6,7 @@
   "description": "Skills by srothgan. Includes the Strava skill for accessing and interpreting Strava MCP data.",
   "plugins": [
     {
-      "name": "strava",
+      "name": "strava-coach",
       "source": "./",
       "description": "Access and interpret Strava data via the Strava MCP with a coach's perspective: correct tools, data shapes, units (km/miles/pace), and training analysis.",
       "version": "0.1.0",

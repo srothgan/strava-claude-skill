@@ -7,7 +7,7 @@ a pull request.
 ## What this project is
 
 A single [Claude skill](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
-(`strava`) that helps Claude fetch and interpret Strava MCP data, packaged as a
+(`strava-coach`) that helps Claude fetch and interpret Strava MCP data, packaged as a
 Claude Code plugin marketplace. Contributions usually fall into one of:
 
 - **Accuracy fixes** — your Strava MCP build returns a field, unit, or quirk that
@@ -19,7 +19,7 @@ Claude Code plugin marketplace. Contributions usually fall into one of:
 
 ```
 .claude-plugin/   marketplace.json + plugin.json (distribution manifests)
-skills/strava/    SKILL.md (entry point) + references/ (loaded on demand)
+skills/strava-coach/  SKILL.md (entry point) + references/ (loaded on demand)
 scripts/          validate.py (structure/link/manifest checks)
 evaluations.md    behavior test scenarios (run by hand against a live MCP)
 ```
