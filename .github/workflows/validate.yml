@@ -16,3 +16,11 @@ jobs:
           python-version: "3.12"
       - name: Validate skills and manifests
         run: python scripts/validate.py
+      - name: Validate Claude plugin manifests (CLI)
+        run: |
+          if command -v claude >/dev/null 2>&1; then
+            claude plugin validate .
+          else
+            echo "claude CLI not available in this runner. Install it locally and run: claude plugin validate ."
+            echo "Skipping this check."
+          fi

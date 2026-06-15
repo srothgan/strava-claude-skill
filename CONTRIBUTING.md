@@ -1,4 +1,4 @@
-# Contributing
+﻿# Contributing
 
 Thanks for helping improve the Strava skill for Claude. This guide explains how
 the repo is organized, how to validate and test changes, and what we look for in
@@ -10,10 +10,10 @@ A single [Claude skill](https://platform.claude.com/docs/en/agents-and-tools/age
 (`strava-coach`) that helps Claude fetch and interpret Strava MCP data, packaged as a
 Claude Code plugin marketplace. Contributions usually fall into one of:
 
-- **Accuracy fixes** — your Strava MCP build returns a field, unit, or quirk that
+- **Accuracy fixes** -- your Strava MCP build returns a field, unit, or quirk that
   the docs get wrong or don't cover.
-- **Interpretation improvements** — better, well-sourced coaching guidance.
-- **Skill-quality fixes** — clearer instructions, tighter structure, broken links.
+- **Interpretation improvements** -- better, well-sourced coaching guidance.
+- **Skill-quality fixes** -- clearer instructions, tighter structure, broken links.
 
 ## Project layout
 
@@ -33,12 +33,12 @@ These follow Anthropic's
 [skill-authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices):
 
 - **Keep `SKILL.md` concise** (well under 500 lines). Push depth into `references/`.
-- **References one level deep** — link reference files directly from `SKILL.md`,
+- **References one level deep** -- link reference files directly from `SKILL.md`,
   not from each other.
 - **Description in third person**, stating both *what* the skill does and *when*
   to use it. Max 1024 chars.
 - **Consistent terminology** and concrete examples over abstract prose.
-- **Both units** — always support km **and** miles, and show running speed as pace.
+- **Both units** -- always support km **and** miles, and show running speed as pace.
 - **No personal data.** This is a public, generic skill. Don't commit anyone's
   athlete data, tokens, or activity IDs; use illustrative example values.
 - **No time-sensitive claims** that will silently rot.
@@ -58,7 +58,7 @@ and that `plugin.json` / `marketplace.json` are valid. It must pass (exit 0).
 
 ## Test behavior with evaluations
 
-`scripts/validate.py` only checks structure — it does **not** test whether the
+`scripts/validate.py` only checks structure -- it does **not** test whether the
 skill actually behaves correctly. For that, use [`evaluations.md`](evaluations.md):
 a set of representative queries plus the behavior a correct run must show.
 
@@ -92,7 +92,7 @@ new version automatically.)
 ## Reporting issues
 
 Open a GitHub issue with: what you asked Claude, what it did, what you expected,
-and — if it's a data/units discrepancy — the relevant tool name and a redacted
+and -- if it's a data/units discrepancy -- the relevant tool name and a redacted
 sample of the response (strip personal data and IDs).
 
 ## License

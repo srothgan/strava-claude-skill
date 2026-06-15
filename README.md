@@ -1,151 +1,168 @@
-# Strava Skill for Claude
+# Strava Coach for Claude
 
 [![Validate skill](https://github.com/srothgan/strava-claude-skill/actions/workflows/validate.yml/badge.svg)](https://github.com/srothgan/strava-claude-skill/actions/workflows/validate.yml)
 
-A [Claude skill](https://docs.claude.com/en/docs/claude-code/skills) that makes
-Claude genuinely good at working with your **Strava MCP** data — both *fetching*
-it correctly and *interpreting* it like a knowledgeable endurance coach.
+From raw Strava records to confident training insight.
 
-It pairs an accurate, field-level understanding of what the Strava MCP returns
-(exact shapes, units, and quirks) with practical training-science guidance (zones,
-relative effort, weekly load, trends, race readiness) and Claude skills best
-practices (a tight `SKILL.md` plus progressively-disclosed reference files).
+Strava Coach helps you turn activity feeds into clear next actions: load trends, zone fidelity, interval consistency, and race-readiness signals, with unit handling and interpretation that respects real-world data gaps.
 
-## Requirements
+## Built for athletes first
 
-- Claude with [Skills](https://docs.claude.com/en/docs/claude-code/skills) support
-  (Claude Code, Claude Desktop, or the API with skills enabled).
-- A connected **Strava MCP** server exposing tools such as `list_activities`,
-  `get_activity_performance`, `get_activity_streams`, `get_athlete_profile`,
-  `get_athlete_zones`, `get_gear`, `get_club_info`, `get_training_plan`,
-  `health`, and `eligibility`. (The skill matches whatever prefix your server
-  registers them under.)
+- Ask better questions about your training
+- Get interpretations you can use for planning
+- Avoid common reading errors across units and missing signals
 
-## Install
+No dashboards. No reconfiguration. Just conversation and context-aware analysis.
 
-### Option A — Claude Code plugin marketplace (recommended)
+## Quick start
 
-This repo is itself a Claude Code marketplace, so installation and updates are
-one command each:
+### 1) Install
+
+### Option A — Claude Code marketplace (recommended)
 
 ```text
 /plugin marketplace add srothgan/strava-claude-skill
 /plugin install strava-coach@srothgan-skills
 ```
 
-Update later with `/plugin marketplace update srothgan-skills`. The skill is
-namespaced as `strava-coach` once installed.
+```text
+/plugin marketplace update srothgan-skills
+```
 
-### Option B — `npx skills` (cross-agent, one command)
-
-The skill follows the open Agent Skills spec, so the
-[`skills` CLI](https://github.com/vercel-labs/skills) installs it straight from
-this repo into Claude Code and other agents (Cursor, Copilot, Codex, …):
+### Option B — `npx skills`
 
 ```bash
 npx skills add srothgan/strava-claude-skill
 ```
 
-### Option C — manual copy (any Skills-capable Claude)
+### Option C — Manual copy
 
-Copy the skill folder into your skills directory:
+Copy the skill directly when you want full control:
 
-- **macOS / Linux:** `~/.claude/skills/`
-- **Windows:** `%USERPROFILE%\.claude\skills\`
+- Global install: `~/.claude/skills/` (macOS/Linux), `%USERPROFILE%\\.claude\\skills\\` (Windows)
+- Project install: `<repo>/.claude/skills/`
 
 ```bash
 git clone https://github.com/srothgan/strava-claude-skill.git
 cp -r strava-claude-skill/skills/strava-coach ~/.claude/skills/
+mkdir -p .claude/skills
+cp -r strava-claude-skill/skills/strava-coach .claude/skills/
 ```
 
 ```powershell
 git clone https://github.com/srothgan/strava-claude-skill.git
 Copy-Item -Recurse strava-claude-skill\skills\strava-coach "$env:USERPROFILE\.claude\skills\"
+New-Item -ItemType Directory -Force -Path .claude\skills | Out-Null
+Copy-Item -Recurse strava-claude-skill\skills\strava-coach ".claude\skills\"
 ```
 
-You should end up with `~/.claude/skills/strava-coach/SKILL.md`. Restart Claude so it
-picks up the new skill.
+Restart Claude after a manual install.
 
-### Option D — project skill
+### 2) Connect Strava MCP
 
-Drop the `skills/strava-coach/` folder into your project's `.claude/skills/` directory
-to ship it with a repo.
+Use a Strava MCP server that exposes:
 
-## Usage
+- `list_activities`
+- `get_activity_performance`
+- `get_activity_streams`
+- `get_athlete_profile`
+- `get_athlete_zones`
+- `get_gear`
+- `get_club_info`
+- `get_training_plan`
+- `health`
+- `eligibility`
 
-Two ways to use it once your Strava MCP is connected:
+### 3) Ask
 
-**Just ask naturally** — Claude triggers the skill automatically:
+You can ask naturally, for example:
 
-- "Analyze my last run."
-- "How did my training load trend over the last 4 weeks? Use miles."
-- "What are my heart-rate and pace zones, in min/km?"
-- "Am I on track for my goal race?"
-- "Were my intervals on Tuesday consistent?"
+- “Summarize my last 5 runs and tell me what to improve.”
+- “Am I on track for my upcoming half marathon?”
+- “Compare this week and last week by training load using miles.”
+- “Are my Tuesday intervals on pace and effort?”
 
-**Or invoke it explicitly as a slash command:**
+## Why this is different
+
+Strava exports are powerful, but easy to misread:
+
+- Units can vary by athlete setup.
+- Speed values may appear as raw m/s.
+- Zone boundaries can look like pace, speed, or heart-rate ranges depending on context.
+- Missing sensors result in missing fields without clear errors.
+
+Strava Coach applies a coaching lens instead of a naive stats layer:
+
+- Detects and confirms unit system from profile context.
+- Converts consistently to km or miles, pace per km or mile.
+- Preserves uncertainty when values are estimated or partial.
+- Distinguishes measured input from inferred insights.
+
+## What you can ask
+
+### Race preparation
+
+- Pace strategy, taper readiness, and effort distribution checks.
+- Last-mile fatigue indicators across long efforts.
+- Trend-aware readiness notes before hard days.
+
+### Consistency and load
+
+- Weekly load and fatigue progression checks.
+- Recovery-informed recommendations when volume or intensity spikes.
+- Missed training pattern detection from activity cadence.
+
+### Quality and form
+
+- Interval stability and target adherence checks.
+- Zone adherence and drift analysis.
+- Pace-effort mismatches when data suggests over-racing.
+
+## Reliability model
+
+- Always confirms assumptions before translating raw fields into recommendations.
+- Applies explicit caveats when a reading is partial, stale, or estimated.
+- Prioritizes measurable signals and names uncertainty clearly.
+- No health or medical claims; no guaranteed race outcomes.
+
+## What’s inside
 
 ```text
-/strava-coach              # manual-copy or project install
-/strava-coach:strava-coach # plugin install (namespaced plugin:skill)
-```
-
-Either way, Claude picks the right tool, confirms the unit system, converts
-correctly (km or miles, pace), and interprets the numbers with appropriate caveats.
-
-## Why
-
-Strava MCP responses are easy to misread. Values come back as raw numbers —
-speeds as m/s, run-pace zones as *speed* boundaries, distances and elevation as
-bare figures — and **you can't safely assume which measurement system they're in**:
-it tracks the athlete's account/server settings, so one user's data may be metric
-and another's imperial. The MCP also silently omits missing data (no HR monitor →
-no heart-rate fields). This skill teaches Claude to **confirm the unit system from
-the athlete's profile**, sanity-check magnitudes, convert correctly (km **or**
-miles, pace per km/mile), and never guess — so it interprets the numbers like a
-coach instead of mislabeling them.
-
-## What's inside
-
-```
 strava-claude-skill/
 ├── .claude-plugin/
-│   ├── marketplace.json                  # makes this repo an installable Claude Code marketplace
-│   └── plugin.json                        # the "strava-coach" plugin manifest
+│   ├── marketplace.json
+│   └── plugin.json
 ├── skills/
 │   └── strava-coach/
-│       ├── SKILL.md                       # entry point: tool map, gotchas, conversions, workflows
+│       ├── SKILL.md
 │       └── references/
-│           ├── tools-and-data.md          # every tool: params, output fields, units, quirks
-│           └── training-interpretation.md # zones, load, trends, race readiness, honesty checklist
-├── scripts/validate.py                    # stdlib-only validator (frontmatter, links, manifests)
-├── .github/workflows/validate.yml         # CI: runs the validator on push/PR
-├── evaluations.md                         # test scenarios for maintainers (not loaded at runtime)
+│           ├── tools-and-data.md
+│           └── training-interpretation.md
+├── scripts/
+│   └── validate.py
+├── .github/workflows/validate.yml
+├── evaluations.md
 ├── LICENSE
 └── README.md
 ```
 
-Claude reads `SKILL.md` first and pulls in a reference file only when a task needs
-the detail — keeping context lean. The structure follows Anthropic's
-[skill-authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
-(concise entry point, one-level-deep references, third-person description,
-shipped evaluations).
+`SKILL.md` remains the primary entry point and loads references only when deeper context is needed.
 
-## Design principles
+## Requirements
 
-- **Grounded:** built from the Strava MCP's actual responses — real fields, real
-  units, real edge cases — not assumptions.
-- **Progressive disclosure:** lean `SKILL.md`, deep detail on demand.
-- **Honest coaching:** separates measured from estimated data, names the analysis
-  window, and avoids medical claims or race-result guarantees.
+- Claude with skills support (Claude Code, Claude Desktop, or API with skills enabled).
+- A Strava MCP server with access to the tools listed above.
 
 ## Contributing
 
-Issues and PRs welcome — especially corrections if your Strava MCP build returns
-fields not documented here. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full
-guide. In short: keep `SKILL.md` tight, push detail into `references/`, run
-`python scripts/validate.py` (must pass), and sanity-check against the scenarios
-in [`evaluations.md`](evaluations.md) with a live Strava MCP.
+Contributions are welcome.
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md). In short:
+
+- Keep `SKILL.md` focused and concise.
+- Move detailed behavior into `references/`.
+- Run `python scripts/validate.py`.
+- Validate scenarios in [`evaluations.md`](evaluations.md) against a live Strava MCP.
 
 ## License
 
@@ -153,4 +170,4 @@ in [`evaluations.md`](evaluations.md) with a live Strava MCP.
 
 ---
 
-*Not affiliated with or endorsed by Strava. "Strava" is a trademark of Strava, Inc.*
+Not affiliated with or endorsed by Strava. "Strava" is a trademark of Strava, Inc.
