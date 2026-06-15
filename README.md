@@ -11,6 +11,88 @@ It pairs an accurate, field-level understanding of what the Strava MCP returns
 relative effort, weekly load, trends, race readiness) and Claude skills best
 practices (a tight `SKILL.md` plus progressively-disclosed reference files).
 
+## Requirements
+
+- Claude with [Skills](https://docs.claude.com/en/docs/claude-code/skills) support
+  (Claude Code, Claude Desktop, or the API with skills enabled).
+- A connected **Strava MCP** server exposing tools such as `list_activities`,
+  `get_activity_performance`, `get_activity_streams`, `get_athlete_profile`,
+  `get_athlete_zones`, `get_gear`, `get_club_info`, `get_training_plan`,
+  `health`, and `eligibility`. (The skill matches whatever prefix your server
+  registers them under.)
+
+## Install
+
+### Option A — Claude Code plugin marketplace (recommended)
+
+This repo is itself a Claude Code marketplace, so installation and updates are
+one command each:
+
+```text
+/plugin marketplace add srothgan/strava-claude-skill
+/plugin install strava-coach@srothgan-skills
+```
+
+Update later with `/plugin marketplace update srothgan-skills`. The skill is
+namespaced as `strava-coach` once installed.
+
+### Option B — `npx skills` (cross-agent, one command)
+
+The skill follows the open Agent Skills spec, so the
+[`skills` CLI](https://github.com/vercel-labs/skills) installs it straight from
+this repo into Claude Code and other agents (Cursor, Copilot, Codex, …):
+
+```bash
+npx skills add srothgan/strava-claude-skill
+```
+
+### Option C — manual copy (any Skills-capable Claude)
+
+Copy the skill folder into your skills directory:
+
+- **macOS / Linux:** `~/.claude/skills/`
+- **Windows:** `%USERPROFILE%\.claude\skills\`
+
+```bash
+git clone https://github.com/srothgan/strava-claude-skill.git
+cp -r strava-claude-skill/skills/strava-coach ~/.claude/skills/
+```
+
+```powershell
+git clone https://github.com/srothgan/strava-claude-skill.git
+Copy-Item -Recurse strava-claude-skill\skills\strava-coach "$env:USERPROFILE\.claude\skills\"
+```
+
+You should end up with `~/.claude/skills/strava-coach/SKILL.md`. Restart Claude so it
+picks up the new skill.
+
+### Option D — project skill
+
+Drop the `skills/strava-coach/` folder into your project's `.claude/skills/` directory
+to ship it with a repo.
+
+## Usage
+
+Two ways to use it once your Strava MCP is connected:
+
+**Just ask naturally** — Claude triggers the skill automatically:
+
+- "Analyze my last run."
+- "How did my training load trend over the last 4 weeks? Use miles."
+- "What are my heart-rate and pace zones, in min/km?"
+- "Am I on track for my goal race?"
+- "Were my intervals on Tuesday consistent?"
+
+**Or invoke it explicitly as a slash command:**
+
+```text
+/strava-coach              # manual-copy or project install
+/strava-coach:strava-coach # plugin install (namespaced plugin:skill)
+```
+
+Either way, Claude picks the right tool, confirms the unit system, converts
+correctly (km or miles, pace), and interprets the numbers with appropriate caveats.
+
 ## Why
 
 Strava MCP responses are easy to misread. Values come back as raw numbers —
@@ -49,79 +131,6 @@ the detail — keeping context lean. The structure follows Anthropic's
 (concise entry point, one-level-deep references, third-person description,
 shipped evaluations).
 
-## Requirements
-
-- Claude with [Skills](https://docs.claude.com/en/docs/claude-code/skills) support
-  (Claude Code, Claude Desktop, or the API with skills enabled).
-- A connected **Strava MCP** server exposing tools such as `list_activities`,
-  `get_activity_performance`, `get_activity_streams`, `get_athlete_profile`,
-  `get_athlete_zones`, `get_gear`, `get_club_info`, `get_training_plan`,
-  `health`, and `eligibility`. (The skill matches whatever prefix your server
-  registers them under.)
-
-## Install
-
-### Option A — Claude Code plugin marketplace (recommended)
-
-This repo is itself a Claude Code marketplace, so installation and updates are
-one command each:
-
-```text
-/plugin marketplace add srothgan/strava-claude-skill
-/plugin install strava-coach@srothgan-skills
-```
-
-Update later with `/plugin marketplace update srothgan-skills`. The skill is
-namespaced as `strava-coach` once installed.
-
-### Option B — manual copy (any Skills-capable Claude)
-
-Copy the skill folder into your skills directory:
-
-- **macOS / Linux:** `~/.claude/skills/`
-- **Windows:** `%USERPROFILE%\.claude\skills\`
-
-```bash
-git clone https://github.com/srothgan/strava-claude-skill.git
-cp -r strava-claude-skill/skills/strava-coach ~/.claude/skills/
-```
-
-```powershell
-git clone https://github.com/srothgan/strava-claude-skill.git
-Copy-Item -Recurse strava-claude-skill\skills\strava-coach "$env:USERPROFILE\.claude\skills\"
-```
-
-You should end up with `~/.claude/skills/strava-coach/SKILL.md`. Restart Claude so it
-picks up the new skill.
-
-### Option C — project skill
-
-Drop the `skills/strava-coach/` folder into your project's `.claude/skills/` directory
-to ship it with a repo.
-
-### Option D — `npx skills` (cross-agent)
-
-The skill follows the open Agent Skills spec, so the
-[`skills` CLI](https://github.com/vercel-labs/skills) can install it straight from
-this repo into Claude Code and other agents (Cursor, Copilot, Codex, …):
-
-```bash
-npx skills add srothgan/strava-claude-skill
-```
-
-## Usage
-
-Just ask naturally once your Strava MCP is connected, e.g.:
-
-- "Analyze my last run."
-- "How did my training load trend over the last 4 weeks? Use miles."
-- "What are my heart-rate and pace zones, in min/km?"
-- "Am I on track for my goal race?"
-- "Were my intervals on Tuesday consistent?"
-
-Claude will pick the right tool, convert units correctly, and interpret the
-numbers with appropriate caveats.
-
 ## Design principles
 
 - **Grounded:** built from the Strava MCP's actual responses — real fields, real
@@ -129,30 +138,6 @@ numbers with appropriate caveats.
 - **Progressive disclosure:** lean `SKILL.md`, deep detail on demand.
 - **Honest coaching:** separates measured from estimated data, names the analysis
   window, and avoids medical claims or race-result guarantees.
-
-## Publishing
-
-This repo doubles as a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces):
-`.claude-plugin/marketplace.json` lists one plugin (`strava-coach`) sourced from
-the repo root (`plugin.json` + `skills/`). To publish:
-
-1. Push this repo to `github.com/srothgan/strava-claude-skill` (public).
-2. (Optional) Validate the marketplace with `claude plugin validate .`.
-3. Share the two install commands above. That's the whole release.
-
-**Versioning / automated updates.** Because the plugin source is a git-hosted
-relative path with `version` set, bump `version` in **both**
-`.claude-plugin/plugin.json` and the matching `marketplace.json` entry on each
-release so users actually receive the update. (Alternatively, remove both
-`version` fields and every commit becomes a new version automatically.) Tagging a
-GitHub Release per version is good practice for changelogs. The
-`.github/workflows/validate.yml` action runs `scripts/validate.py` on every push
-and PR, so broken frontmatter, dead reference links, or malformed manifests fail
-CI before release.
-
-**Wider discovery.** Beyond your own marketplace, you can list the repo in
-community indexes (e.g. awesome-claude-* lists) or submit to Anthropic's official
-plugin directory, which has quality/security review.
 
 ## Contributing
 
