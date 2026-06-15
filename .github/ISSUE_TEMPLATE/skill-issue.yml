@@ -1,0 +1,47 @@
+name: Skill behavior / bug
+description: The skill misbehaves, gives wrong output, has broken links, or won't install.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For wrong output, focus on the *behavior* — `scripts/validate.py` covers
+        structural problems. **Redact personal data** from any transcript.
+  - type: textarea
+    id: asked
+    attributes:
+      label: What you asked Claude
+      description: The prompt(s) you used.
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened
+      description: What Claude did (redacted transcript or summary).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How is the skill installed?
+      options:
+        - Plugin marketplace (/plugin install)
+        - Manual copy to ~/.claude/skills
+        - Project skill (.claude/skills)
+        - Other / not sure
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Claude surface + version (e.g. Claude Code v2.x, Claude Desktop), OS.
+    validations:
+      required: false

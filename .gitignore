@@ -1,0 +1,16 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local notes / scratch (keep personal Strava exports out of the repo)
+scratch/
+*.local.md
+*.gpx
+*.fit
+*.tcx

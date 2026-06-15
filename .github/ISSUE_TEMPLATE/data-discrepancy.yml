@@ -1,0 +1,51 @@
+name: Data / units discrepancy
+description: The Strava MCP returns a field, unit, or quirk that the skill documents incorrectly or doesn't cover.
+labels: ["data-accuracy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for things like "field X is actually in unit Y", "tool Z returns a
+        field we don't document", or "this value can be missing".
+
+        **⚠ Redact personal data.** Strip names, locations, exact activity IDs, and
+        anything identifying from any sample you paste.
+  - type: input
+    id: tool
+    attributes:
+      label: Tool
+      description: Which Strava MCP tool is involved?
+      placeholder: e.g. list_activities, get_activity_streams
+    validations:
+      required: true
+  - type: input
+    id: field
+    attributes:
+      label: Field
+      description: The specific field or value.
+      placeholder: e.g. summary.avg_speed
+    validations:
+      required: true
+  - type: textarea
+    id: documented
+    attributes:
+      label: What the skill currently says
+      description: Quote the relevant line(s) from SKILL.md or a reference file (with file path).
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What your MCP actually returns
+      description: A redacted sample showing the real shape/units/behavior.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: MCP server / build
+      description: Which Strava MCP are you using, if known?
+      placeholder: e.g. claude_ai_Strava (hosted), self-hosted strava-mcp vX
+    validations:
+      required: false

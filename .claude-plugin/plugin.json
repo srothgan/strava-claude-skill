@@ -1,0 +1,21 @@
+{
+  "name": "strava",
+  "description": "Access and interpret Strava data via the Strava MCP with a coach's perspective: correct tools, data shapes, units (km/miles/pace), and training analysis.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Simon Rothgang"
+  },
+  "homepage": "https://github.com/srothgan/strava-claude-skill",
+  "repository": "https://github.com/srothgan/strava-claude-skill",
+  "license": "MIT",
+  "keywords": [
+    "strava",
+    "running",
+    "cycling",
+    "fitness",
+    "training",
+    "coaching",
+    "mcp",
+    "endurance"
+  ]
+}

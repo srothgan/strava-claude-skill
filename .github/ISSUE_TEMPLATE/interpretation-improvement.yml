@@ -1,0 +1,30 @@
+name: Interpretation / coaching improvement
+description: Improve or correct the training-science guidance (zones, load, trends, race readiness, etc.).
+labels: ["interpretation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Training guidance must be sound and sourced. Please back claims with a
+        reputable reference so reviewers can verify them.
+  - type: textarea
+    id: current
+    attributes:
+      label: Current guidance
+      description: What does the skill say now? Quote it with the file path (usually references/training-interpretation.md).
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed change
+      description: What should it say instead, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Links or citations supporting the change.
+    validations:
+      required: true

@@ -1,0 +1,27 @@
+{
+  "name": "srothgan-skills",
+  "owner": {
+    "name": "Simon Rothgang"
+  },
+  "description": "Skills by srothgan. Includes the Strava skill for accessing and interpreting Strava MCP data.",
+  "plugins": [
+    {
+      "name": "strava",
+      "source": "./",
+      "description": "Access and interpret Strava data via the Strava MCP with a coach's perspective: correct tools, data shapes, units (km/miles/pace), and training analysis.",
+      "version": "0.1.0",
+      "license": "MIT",
+      "category": "productivity",
+      "homepage": "https://github.com/srothgan/strava-claude-skill",
+      "keywords": [
+        "strava",
+        "running",
+        "cycling",
+        "fitness",
+        "training",
+        "coaching",
+        "mcp"
+      ]
+    }
+  ]
+}
